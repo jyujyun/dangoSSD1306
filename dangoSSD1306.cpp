@@ -5,6 +5,8 @@
 #include "hardware/i2c.h"
 #include  <math.h>
 #include "dangoSSD1306.h"
+#include "kanji.h"
+#include "shiftJIS.h"
 uint8_t OLED_buff[1024];
 void oledDraw8(char dx,char dy,const uint8_t  bmp[])
 {
@@ -149,7 +151,7 @@ void oledFont8(char dx,char dy,char fontSize,int startAdd,const uint8_t bmp[])
 }
 /*
 oledFullString
-ひらがな対応!
+ひらがなと漢字対応!
 ソースコードはUTF-8で保存してください
 */
 void oledFullString(char dx,char dy,const char str[])
@@ -167,6 +169,23 @@ void oledFullString(char dx,char dy,const char str[])
 				drawAdd -= 0xC0;
 			}
 			oledFont8(dx,dy,8,drawAdd * 8,font_jp_8);
+			strC += 3;
+			dx += 8;
+		}
+		else if (str[strC] >= 228)
+		{
+			//漢字でコード
+			uint16_t cByte[3];
+            cByte[0] = str[strC] & 0b00001111;
+            cByte[1] = str[strC + 1] & 0b00111111;
+            cByte[2] = str[strC + 2] & 0b00111111;
+            uint16_t mojiCode;
+			
+            mojiCode = cByte[0] << 12 | cByte[1] << 6 | cByte[2];
+			printf("mojiCode:%x\n",mojiCode);
+			uint16_t drawAdd = shiftJIS[mojiCode - 0x4E00];
+			printf("%d,",drawAdd);
+			oledFont8(dx,dy,8,drawAdd * 8,kanji);
 			strC += 3;
 			dx += 8;
 		}
