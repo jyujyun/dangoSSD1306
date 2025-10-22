@@ -18,7 +18,7 @@ UTF-8での保存必須!
 #define I2C_PORT i2c0   //i2cチャンネル
 #define I2C_SDA 4       //データピン番号
 #define I2C_SCL 5       //クロックピン番号
-#define OLED_ADD 0x3D   //OLEDのi2cアドレス 通常は0x3C はんだ付けで0x3Dに変更可能
+#define OLED_ADD 0x3C   //OLEDのi2cアドレス 通常は0x3C はんだ付けで0x3Dに変更可能
 //===============
 const uint8_t initCommand0[] = {
     0x80, 0xAE,
@@ -50,7 +50,10 @@ extern "C" {
     void oledInit(void);
     void oledDrawFill(const char bmp[]);
     void oledPixel(char dx, char dy, char po);
+    void oledBox(char x1, char y1, char x2, char y2);
     void oledLine(char x1, char y1, char x2, char y2);
+    void oledBox(char x1, char y1, char x2, char y2);
+    
     void oledSend(void);
     void oledClear(char dat);
     void oledChar(char dx, char dy,char ch);
